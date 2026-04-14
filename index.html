@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jam Digital Weton Akurat</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: #e0e0e0;
+            font-family: 'Courier New', Courier, monospace;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            padding: 40px;
+            border: 1px solid #333;
+            border-radius: 10px;
+            background: #1e1e1e;
+        }
+        #clock {
+            font-size: 4rem;
+            color: #00ff00; /* Hijau Retro */
+            margin: 0;
+        }
+        #info {
+            font-size: 1.5rem;
+            margin-top: 10px;
+            color: #ffa500; /* Oranye untuk kontras */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="clock">00:00:00</div>
+        <div id="info">Memproses...</div>
+    </div>
+
+    <script>
+        function updateJam() {
+            const sekarang = new Date();
+            
+            // Tampilkan Jam
+            const h = String(sekarang.getHours()).padStart(2, '0');
+            const m = String(sekarang.getMinutes()).padStart(2, '0');
+            const s = String(sekarang.getSeconds()).padStart(2, '0');
+            document.getElementById('clock').innerText = `${h}:${m}:${s}`;
+
+            // Data Hari dan Pasaran
+            const hariMasehi = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const pasaranJawa = ["Legi", "Pahing", "Pon", "Wage", "Kliwon"];
+
+            // LOGIKA PERHITUNGAN:
+            // 1 Januari 1970 adalah Kamis WAGE.
+            // Dalam array kita, "Wage" ada di index ke-3.
+            
+            // Hitung jumlah hari sejak 1 Jan 1970
+            const milidetikPerHari = 24 * 60 * 60 * 1000;
+            // Gunakan Math.floor untuk mendapatkan jumlah hari bulat
+            const selisihHari = Math.floor((sekarang.getTime() - sekarang.getTimezoneOffset() * 60000) / milidetikPerHari);
+            
+            // Hitung index pasaran
+            // +3 karena 1 Jan 1970 adalah Wage (index 3 dalam urutan Legi, Pahing, Pon, Wage, Kliwon)
+            let indexPasaran = (selisihHari + 3) % 5;
+            
+            const hariIni = hariMasehi[sekarang.getDay()];
+            const pasaranIni = pasaranJawa[indexPasaran];
+            const tgl = sekarang.getDate();
+            const bln = sekarang.toLocaleString('id-ID', { month: 'long' });
+            const thn = sekarang.getFullYear();
+
+            document.getElementById('info').innerText = `${hariIni} ${pasaranIni}, ${tgl} ${bln} ${thn}`;
+        }
+
+        setInterval(updateJam, 1000);
+        updateJam();
+    </script>
+</body>
+</html>
